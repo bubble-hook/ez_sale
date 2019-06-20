@@ -1,2 +1,2 @@
 [Filename: Procfile]
-web: go-api
+web: ezsale
