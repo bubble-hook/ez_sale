@@ -15,7 +15,7 @@ var err error
 
 func Init() {
 	configuration := config.GetConfig()
-	connectString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s ", configuration.DB_HOST, configuration.DB_PORT, configuration.DB_USERNAME, configuration.DB_NAME, configuration.DB_PASSWORD)
+	connectString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s ", configuration.DB_HOST, configuration.DB_PORT, configuration.DB_USERNAME, configuration.DB_NAME, configuration.DB_PASSWORD)
 	fmt.Println(connectString)
 	db, err = gorm.Open("postgres", connectString)
 	// defer db.Close()

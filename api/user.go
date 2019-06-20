@@ -35,7 +35,8 @@ func CreateUser(c echo.Context) error {
 	}
 
 	cUser := 0
-	db.Where(&model.User{Username: u.Username}).Count(cUser)
+
+	db.Model(&model.User{}).Where("username = ?", u.Username).Count(&cUser)
 	if cUser > 0 {
 		return ErrorResponseMessage(c, http.StatusBadRequest, "Duplicated userName")
 	}

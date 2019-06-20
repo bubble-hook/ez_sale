@@ -20,6 +20,7 @@ func Init() *echo.Echo {
 	}))
 
 	e.POST("/login", api.Login)
+	e.POST("/users", api.CreateUser)
 
 	authGroup := e.Group("/api")
 
@@ -30,7 +31,6 @@ func Init() *echo.Echo {
 	authGroup.GET("/users", api.GetUsers)
 	authGroup.GET("/users/:id", api.GetUserById)
 	authGroup.DELETE("/users/:id", api.DeleteUser)
-	authGroup.POST("/users", api.CreateUser)
 
 	// e.GET("/", home)
 	// e.GET("/info", getInfo)
