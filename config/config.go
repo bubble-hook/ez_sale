@@ -14,6 +14,7 @@ type Configuration struct {
 	DB_NAME        string
 	APP_PORT       string
 	APP_SINGINGKEY string
+	DB_SSL         bool
 }
 
 func GetConfig() Configuration {

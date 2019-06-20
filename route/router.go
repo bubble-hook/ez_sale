@@ -2,7 +2,7 @@ package route
 
 import (
 	"ezsale/api"
-	"ezsale/config"
+	"fmt"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -10,7 +10,10 @@ import (
 
 func Init() *echo.Echo {
 
-	configuration := config.GetConfig()
+	userResouceName := "/users"
+	productCategoryResouceName := "/productCategory"
+
+	//configuration := config.GetConfig()
 
 	e := echo.New()
 
@@ -20,17 +23,20 @@ func Init() *echo.Echo {
 	}))
 
 	e.POST("/login", api.Login)
-	e.POST("/users", api.CreateUser)
+	e.POST(userResouceName, api.CreateUser)
 
-	authGroup := e.Group("/api")
+	authGroup := e.Group("api")
 
-	authGroup.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-		SigningKey: []byte(configuration.APP_SINGINGKEY),
-	}))
+	// authGroup.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+	// 	SigningKey: []byte(configuration.APP_SINGINGKEY),
+	// }))
 
-	authGroup.GET("/users", api.GetUsers)
-	authGroup.GET("/users/:id", api.GetUserById)
-	authGroup.DELETE("/users/:id", api.DeleteUser)
+	authGroup.GET(userResouceName, api.GetUsers)
+	authGroup.GET(fmt.Sprintf("%s/:id", userResouceName), api.GetUserById)
+	authGroup.DELETE(fmt.Sprintf("%s/:id", userResouceName), api.DeleteUser)
+
+	authGroup.GET(productCategoryResouceName, api.GetProductCategory)
+	authGroup.POST(productCategoryResouceName, api.CreateProductCategory)
 
 	// e.GET("/", home)
 	// e.GET("/info", getInfo)

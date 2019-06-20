@@ -10,19 +10,7 @@ import (
 )
 
 func GetUsers(c echo.Context) error {
-	db := db.DbManager()
-	sName := c.QueryParam("sName")
-	tx := db
-
-	if sName != "" {
-		tx = db.Where("name like ?", sName)
-	}
-
-	users := []model.User{}
-	tx.Find(&users)
-	// spew.Dump(json.Marshal(users))
-	// return c.JSON(http.StatusOK, users)s
-	return c.JSON(http.StatusOK, users)
+	return SearchMaster(c, &[]model.User{})
 }
 
 func CreateUser(c echo.Context) error {
@@ -47,7 +35,7 @@ func CreateUser(c echo.Context) error {
 	}
 	u.Password = string(hash)
 	db.Create(&u)
-	db.Save(&u)
+	//db.Save(&u)
 	return c.JSON(http.StatusCreated, u)
 }
 
@@ -63,10 +51,5 @@ func GetUserById(c echo.Context) error {
 }
 
 func DeleteUser(c echo.Context) error {
-	id := c.Param("id")
-	db := db.DbManager()
-	u := model.User{}
-	db.Where("id = ?", id).First(&u)
-	db.Delete(&u)
-	return c.JSON(http.StatusOK, u)
+	return DeleteMaster(c, &model.User{})
 }
