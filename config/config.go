@@ -23,9 +23,9 @@ func GetConfig() Configuration {
 	configuration := Configuration{}
 
 	if flag.Lookup("test.v") == nil {
-		gonfig.GetConf("config.json", &configuration)
+		gonfig.GetConf("config.l.json", &configuration)
 	} else {
-		gonfig.GetConf("../config.json", &configuration)
+		gonfig.GetConf("../config.c.json", &configuration)
 	}
 
 	return configuration
