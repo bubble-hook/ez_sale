@@ -42,6 +42,7 @@ func SearchMaster(c echo.Context, masterModel interface{}) error {
 	db := db.DbManager()
 	sName := c.QueryParam("sName")
 	sCode := c.QueryParam("sCode")
+	deleted := c.QueryParam("deleted")
 	tx := db
 
 	if sName != "" {
@@ -52,7 +53,12 @@ func SearchMaster(c echo.Context, masterModel interface{}) error {
 		tx = db.Where("code like ?", fmt.Sprintf("%s%s%s", "%", sCode, "%ss"))
 	}
 
-	tx.Find(masterModel).Debug()
+	if deleted == "yes" {
+		tx.Unscoped().Where("deleted_at IS NOT NULL").Find(masterModel).Debug()
+	} else {
+		tx.Find(masterModel).Debug()
+	}
+
 	return c.JSON(http.StatusOK, masterModel)
 }
 

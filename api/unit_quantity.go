@@ -11,7 +11,7 @@ func GetUnitQuantity(c echo.Context) error {
 }
 
 func CreateUnitQuantity(c echo.Context) error {
-	return CreateMasterData(c, model.UnitQuantity{})
+	return CreateMasterData(c, &model.UnitQuantity{})
 }
 
 func UpdateUnitQuantity(c echo.Context) error {

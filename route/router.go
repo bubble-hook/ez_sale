@@ -12,6 +12,7 @@ func Init() *echo.Echo {
 
 	userResouceName := "/users"
 	productCategoryResouceName := "/productCategory"
+	unitQuantityResouceName := "/unitQuantity"
 
 	//configuration := config.GetConfig()
 
@@ -39,6 +40,11 @@ func Init() *echo.Echo {
 	authGroup.POST(productCategoryResouceName, api.CreateProductCategory)
 	authGroup.PUT(productCategoryResouceName, api.UpdateProductCategory)
 	authGroup.DELETE(fmt.Sprintf("%s/:id", productCategoryResouceName), api.DeleteProductCategory)
+
+	authGroup.GET(unitQuantityResouceName, api.GetUnitQuantity)
+	authGroup.POST(unitQuantityResouceName, api.CreateUnitQuantity)
+	authGroup.PUT(unitQuantityResouceName, api.UpdateUnitQuantity)
+	authGroup.DELETE(fmt.Sprintf("%s/:id", unitQuantityResouceName), api.DeleteUnitQuantity)
 
 	// e.GET("/", home)
 	// e.GET("/info", getInfo)
