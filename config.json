@@ -1,11 +1,10 @@
 {
-
     "APP_SINGINGKEY" : "ASCKMFQPWDDWLKMACLMKSWLKEM21KLLKDLKALFLSAK21321",
     "APP_PORT" : "1234",
-    "DB_USERNAME": "hmhngeycqvlbxf",
-    "DB_PASSWORD": "4280f8913aa9b8230e864eb37a8ce932afcdd9eb1a51aba7f9464da34f6e88f1",
+    "DB_USERNAME": "pratinsonnegon",
+    "DB_PASSWORD": "",
     "DB_PORT": "5432",
-    "DB_HOST": "ec2-50-19-221-38.compute-1.amazonaws.com",
-    "DB_NAME": "db7mpe33qtl3nc",
-    "DB_SSL" : true
+    "DB_HOST": "localhost",
+    "DB_NAME": "ezsale",
+    "DB_SSL" : false
 }

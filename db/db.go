@@ -40,7 +40,16 @@ func Init() {
 
 	db.LogMode(true)
 
+	db.Callback().Create().Before("gorm:create").Register("delete_id_before_create", clearIDBerforeCreate)
+
 }
+
+func clearIDBerforeCreate(scope *gorm.Scope) {
+	if scope.HasColumn("ID") {
+		scope.SetColumn("ID", 0)
+	}
+}
+
 func DbManager() *gorm.DB {
 	return db
 }

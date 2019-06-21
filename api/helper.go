@@ -2,10 +2,12 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"ezsale/db"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 
 	"github.com/labstack/echo"
 )
@@ -63,5 +65,55 @@ func DeleteMaster(c echo.Context, masterModel interface{}) error {
 		return ErrorResponseMessage(c, http.StatusNotFound, "Not Found Item")
 	}
 	db.Where("id = ?", id).First(masterModel).Delete(masterModel)
+	return c.JSON(http.StatusOK, &masterModel)
+}
+
+func ValidateMasterData(masterModel interface{}, isCreate bool) error {
+	db := db.DbManager()
+	r := reflect.ValueOf(masterModel)
+	fCode := reflect.Indirect(r).FieldByName("Code")
+	fID := reflect.Indirect(r).FieldByName("ID")
+	cModel := 0
+	code := fCode.String()
+	id := fID.Uint()
+	tableName := db.NewScope(masterModel).GetModelStruct().TableName(db)
+	if isCreate {
+		db.Table(tableName).Where("code = ?", code).Count(&cModel)
+	} else {
+		db.Table(tableName).Where("code = ?", code).Where("id <> ?", id).Count(&cModel)
+	}
+
+	if cModel > 0 {
+		return errors.New("Duppicate Master Field Code")
+	}
+	return nil
+}
+
+func CreateMasterData(c echo.Context, masterModel interface{}) error {
+	db := db.DbManager()
+	err := JsonBodyTo(c, masterModel)
+	if err != nil {
+		return ErrorResponse(c, err)
+	}
+	err = ValidateMasterData(masterModel, true)
+	if err != nil {
+		return ErrorResponse(c, err)
+	}
+	db.Create(masterModel)
+	return c.JSON(http.StatusCreated, masterModel)
+}
+
+func UpdateMasterData(c echo.Context, masterModel interface{}) error {
+	err := JsonBodyTo(c, masterModel)
+	if err != nil {
+		return ErrorResponse(c, err)
+	}
+	err = ValidateMasterData(masterModel, false)
+	if err != nil {
+		return ErrorResponse(c, err)
+	}
+	///fmt.Println(spew.Sdump(&masterModel))
+	db := db.DbManager()
+	db.Debug().Model(masterModel).Updates(masterModel)
 	return c.JSON(http.StatusOK, &masterModel)
 }

@@ -37,6 +37,8 @@ func Init() *echo.Echo {
 
 	authGroup.GET(productCategoryResouceName, api.GetProductCategory)
 	authGroup.POST(productCategoryResouceName, api.CreateProductCategory)
+	authGroup.PUT(productCategoryResouceName, api.UpdateProductCategory)
+	authGroup.DELETE(fmt.Sprintf("%s/:id", productCategoryResouceName), api.DeleteProductCategory)
 
 	// e.GET("/", home)
 	// e.GET("/info", getInfo)
