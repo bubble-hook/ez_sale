@@ -13,6 +13,11 @@ type ProductCategory struct {
 	MasterData
 }
 
+type ProductCreateRequest struct {
+	Product
+	UnitPrice float32 `json:"unitPrice"`
+}
+
 type Product struct {
 	Model
 	MasterData
@@ -20,15 +25,16 @@ type Product struct {
 	ProductCategory    ProductCategory `gorm:"foreignkey:ProductCategoryID"json:"productCategory"`
 	MainUnitQuantityID uint            `json:"mainUnitQuantityID"`
 	UnitQuantity       UnitQuantity    `gorm:"foreignkey:MainUnitQuantityID"json:"mainUnitQuantity"`
+	GoodsItems         []Goods         `gorm:"foreignkey:ProductID"json:"goodsItems"`
 }
 
 type Goods struct {
 	Model
 	MasterData
-	ProductID      uint         `json:"productId"`
-	Product        Product      `gorm:"foreignkey:ProductCategoryID"json:"product"`
+	ProductID uint `json:"productId"`
+	//Product        Product      `gorm:"foreignkey:ProductCategoryID"json:"product"`
 	UnitQuantityID uint         `json:"unitQuantityID"`
-	UnitQuantity   UnitQuantity `gorm:"foreignkey:"ProductCategoryID"json:"unitQuantity"`
+	UnitQuantity   UnitQuantity `gorm:"foreignkey:unitQuantityID"json:"unitQuantity"`
 	UnitPrice      float32      `json:"unitPrice"`
 }
 

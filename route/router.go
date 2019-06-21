@@ -10,9 +10,17 @@ import (
 
 func Init() *echo.Echo {
 
-	userResouceName := "/users"
-	productCategoryResouceName := "/productCategory"
-	unitQuantityResouceName := "/unitQuantity"
+	// userResouceName := "/users"
+	// productCategoryResouceName := "/productCategory"
+	// unitQuantityResouceName := "/unitQuantity"
+	// productResouceName := ""
+
+	resouceNames := map[string]string{
+		"users":           "/users",
+		"productCategory": "/productCategory",
+		"unitQuantity":    "/unitQuantity",
+		"product":         "/product",
+	}
 
 	//configuration := config.GetConfig()
 
@@ -24,7 +32,7 @@ func Init() *echo.Echo {
 	}))
 
 	e.POST("/login", api.Login)
-	e.POST(userResouceName, api.CreateUser)
+	e.POST(resouceNames["users"], api.CreateUser)
 
 	authGroup := e.Group("api")
 
@@ -32,19 +40,21 @@ func Init() *echo.Echo {
 	// 	SigningKey: []byte(configuration.APP_SINGINGKEY),
 	// }))
 
-	authGroup.GET(userResouceName, api.GetUsers)
-	authGroup.GET(fmt.Sprintf("%s/:id", userResouceName), api.GetUserById)
-	authGroup.DELETE(fmt.Sprintf("%s/:id", userResouceName), api.DeleteUser)
+	authGroup.GET(resouceNames["users"], api.GetUsers)
+	authGroup.GET(fmt.Sprintf("%s/:id", resouceNames["users"]), api.GetUserById)
+	authGroup.DELETE(fmt.Sprintf("%s/:id", resouceNames["users"]), api.DeleteUser)
 
-	authGroup.GET(productCategoryResouceName, api.GetProductCategory)
-	authGroup.POST(productCategoryResouceName, api.CreateProductCategory)
-	authGroup.PUT(productCategoryResouceName, api.UpdateProductCategory)
-	authGroup.DELETE(fmt.Sprintf("%s/:id", productCategoryResouceName), api.DeleteProductCategory)
+	authGroup.GET(resouceNames["productCategory"], api.GetProductCategory)
+	authGroup.POST(resouceNames["productCategory"], api.CreateProductCategory)
+	authGroup.PUT(resouceNames["productCategory"], api.UpdateProductCategory)
+	authGroup.DELETE(fmt.Sprintf("%s/:id", resouceNames["productCategory"]), api.DeleteProductCategory)
 
-	authGroup.GET(unitQuantityResouceName, api.GetUnitQuantity)
-	authGroup.POST(unitQuantityResouceName, api.CreateUnitQuantity)
-	authGroup.PUT(unitQuantityResouceName, api.UpdateUnitQuantity)
-	authGroup.DELETE(fmt.Sprintf("%s/:id", unitQuantityResouceName), api.DeleteUnitQuantity)
+	authGroup.GET(resouceNames["unitQuantity"], api.GetUnitQuantity)
+	authGroup.POST(resouceNames["unitQuantity"], api.CreateUnitQuantity)
+	authGroup.PUT(resouceNames["unitQuantity"], api.UpdateUnitQuantity)
+	authGroup.DELETE(fmt.Sprintf("%s/:id", resouceNames["unitQuantity"]), api.DeleteUnitQuantity)
+
+	authGroup.POST(resouceNames["product"], api.CreateProduct)
 
 	// e.GET("/", home)
 	// e.GET("/info", getInfo)
