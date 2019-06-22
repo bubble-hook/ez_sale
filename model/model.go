@@ -12,6 +12,7 @@ type Model struct {
 }
 
 type MasterData struct {
-	Name string `json:"name"`
-	Code string `gorm:"unique;not null"json:"code"`
+	Name    string `json:"name"`
+	Code    string `gorm:"unique;not null"json:"code"`
+	StoreID string `json:"storeId"`
 }

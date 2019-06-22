@@ -45,3 +45,12 @@ type StockMove struct {
 	ProductId uint      `json:"productId"`
 	Qty       float32   `json:"qty"`
 }
+
+type StockBalance struct {
+	ID         uint      `gorm:"primary_key"json:"id"`
+	CreatedAt  time.Time `json:"createdAt"`
+	UpdatedAt  time.Time `json:"updatedAt"`
+	ProductId  uint      `json:"productId"`
+	PrvQty     float32
+	CurrentQty float32
+}

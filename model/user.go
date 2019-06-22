@@ -7,6 +7,12 @@ type User struct {
 	Password string
 }
 
+type CreateUserRequest struct {
+	User
+	StoreName string `json:"storeName`
+	Password  string `json:"password"`
+}
+
 type UserToken struct {
 	Model
 	UserId      uint   `json:"userId"`

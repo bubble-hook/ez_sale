@@ -36,12 +36,12 @@ func Init() {
 		&model.Product{},
 		&model.UnitQuantity{},
 		&model.Goods{},
+		&model.Store{},
+		&model.StoreUser{},
 	)
 
 	db.LogMode(true)
-
 	db.Callback().Create().Before("gorm:create").Register("delete_id_before_create", clearIDBerforeCreate)
-
 }
 
 func clearIDBerforeCreate(scope *gorm.Scope) {

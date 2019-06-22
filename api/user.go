@@ -5,6 +5,7 @@ import (
 	"ezsale/model"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,12 +16,15 @@ func GetUsers(c echo.Context) error {
 
 func CreateUser(c echo.Context) error {
 	db := db.DbManager()
-	u := model.User{}
 
-	err := JsonBodyTo(c, &u)
+	uRequest := model.CreateUserRequest{}
+
+	err := JsonBodyTo(c, &uRequest)
 	if err != nil {
 		return ErrorResponse(c, err)
 	}
+
+	u := model.User(uRequest.User)
 
 	cUser := 0
 
@@ -29,12 +33,36 @@ func CreateUser(c echo.Context) error {
 		return ErrorResponseMessage(c, http.StatusBadRequest, "Duplicated userName")
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte("12345678"), bcrypt.MinCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(uRequest.Password), bcrypt.MinCost)
 	if err != nil {
 		return ErrorResponse(c, err)
 	}
 	u.Password = string(hash)
-	db.Create(&u)
+
+	tx := db.Begin()
+
+	store := model.Store{}
+	storeUser := model.StoreUser{}
+
+	if err := tx.Create(&u).Error; err != nil {
+		tx.Rollback()
+		return ErrorResponse(c, err)
+	}
+	store.OwnerUserID = u.ID
+	store.StoreID = uuid.New().String()
+	store.Name = uRequest.StoreName
+	if err := tx.Create(&store).Error; err != nil {
+		tx.Rollback()
+		return ErrorResponse(c, err)
+	}
+	storeUser.StoreID = store.ID
+	storeUser.UserID = u.ID
+	if err := tx.Create(&storeUser).Error; err != nil {
+		tx.Rollback()
+		return ErrorResponse(c, err)
+	}
+	tx.Commit()
+
 	//db.Save(&u)
 	return c.JSON(http.StatusCreated, u)
 }

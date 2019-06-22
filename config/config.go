@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"fmt"
 
 	"github.com/tkanos/gonfig"
 )
@@ -23,8 +24,10 @@ func GetConfig() Configuration {
 	configuration := Configuration{}
 
 	if flag.Lookup("test.v") == nil {
-		gonfig.GetConf("config.l.json", &configuration)
+		fmt.Println("user c config")
+		gonfig.GetConf("config.c.json", &configuration)
 	} else {
+		fmt.Println("user l config")
 		gonfig.GetConf("../config.c.json", &configuration)
 	}
 
