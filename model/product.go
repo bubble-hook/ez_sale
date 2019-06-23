@@ -2,10 +2,9 @@ package model
 
 import "time"
 
-type UnitQuantity struct {
+type SellingUnit struct {
 	Model
 	MasterData
-	Qty float32 `json:"qty"`
 }
 
 type ProductCategory struct {
@@ -13,37 +12,24 @@ type ProductCategory struct {
 	MasterData
 }
 
-type ProductCreateRequest struct {
-	Product
-	UnitPrice float32 `json:"unitPrice"`
-}
-
 type Product struct {
 	Model
 	MasterData
-	ProductCategoryID  uint            `json:"productCategotyID"`
-	ProductCategory    ProductCategory `gorm:"foreignkey:ProductCategoryID"json:"productCategory"`
-	MainUnitQuantityID uint            `json:"mainUnitQuantityID"`
-	UnitQuantity       UnitQuantity    `gorm:"foreignkey:MainUnitQuantityID"json:"mainUnitQuantity"`
-	GoodsItems         []Goods         `gorm:"foreignkey:ProductID"json:"goodsItems"`
-}
-
-type Goods struct {
-	Model
-	MasterData
-	ProductID uint `json:"productId"`
-	//Product        Product      `gorm:"foreignkey:ProductCategoryID"json:"product"`
-	UnitQuantityID uint         `json:"unitQuantityID"`
-	UnitQuantity   UnitQuantity `gorm:"foreignkey:unitQuantityID"json:"unitQuantity"`
-	UnitPrice      float32      `json:"unitPrice"`
+	ProductCategoryID uint            `json:"productCategotyID"`
+	ProductCategory   ProductCategory `gorm:"foreignkey:ProductCategoryID"json:"productCategory"`
+	SellingUnitID     uint            `json:"sellingUnitID"`
+	SellingUnit       SellingUnit     `gorm:"foreignkey:SellingUnitID"json:"sellingUnitID"`
+	SellingPrice      float32         `json:"sellingPrice"`
+	Cost              float32         `json:"cost"`
 }
 
 type StockMove struct {
 	ID        uint      `gorm:"primary_key"json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-	ProductId uint      `json:"productId"`
-	Qty       float32   `json:"qty"`
+	Refer     uint
+	ProductId uint    `json:"productId"`
+	Qty       float32 `json:"qty"`
 }
 
 type StockBalance struct {

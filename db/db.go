@@ -34,8 +34,7 @@ func Init() {
 		&model.UserToken{},
 		&model.ProductCategory{},
 		&model.Product{},
-		&model.UnitQuantity{},
-		&model.Goods{},
+		&model.SellingUnit{},
 		&model.Store{},
 		&model.StoreUser{},
 	)

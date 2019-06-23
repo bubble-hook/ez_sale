@@ -18,7 +18,7 @@ func Init() *echo.Echo {
 	resouceNames := map[string]string{
 		"users":           "/users",
 		"productCategory": "/productCategory",
-		"unitQuantity":    "/unitQuantity",
+		"sellingUnit":     "/sellingUnit",
 		"product":         "/product",
 	}
 
@@ -49,12 +49,14 @@ func Init() *echo.Echo {
 	authGroup.PUT(resouceNames["productCategory"], api.UpdateProductCategory)
 	authGroup.DELETE(fmt.Sprintf("%s/:id", resouceNames["productCategory"]), api.DeleteProductCategory)
 
-	authGroup.GET(resouceNames["unitQuantity"], api.GetUnitQuantity)
-	authGroup.POST(resouceNames["unitQuantity"], api.CreateUnitQuantity)
-	authGroup.PUT(resouceNames["unitQuantity"], api.UpdateUnitQuantity)
-	authGroup.DELETE(fmt.Sprintf("%s/:id", resouceNames["unitQuantity"]), api.DeleteUnitQuantity)
+	authGroup.GET(resouceNames["sellingUnit"], api.GetSellingUnit)
+	authGroup.POST(resouceNames["sellingUnit"], api.CreateSellingUnit)
+	authGroup.PUT(resouceNames["sellingUnit"], api.UpdateSellingUnit)
+	authGroup.DELETE(fmt.Sprintf("%s/:id", resouceNames["sellingUnit"]), api.DeleteSellingUnit)
 
 	authGroup.POST(resouceNames["product"], api.CreateProduct)
+
+	authGroup.POST("/order/process", api.ProcessOrder)
 
 	// e.GET("/", home)
 	// e.GET("/info", getInfo)

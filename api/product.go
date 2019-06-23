@@ -12,21 +12,27 @@ func GetProduct(c echo.Context) error {
 	return SearchMaster(c, model.Product{})
 }
 
+type CreateProductRequest struct {
+	model.Product
+	StockInit uint `json:"stockInitQty"`
+}
+
 func CreateProduct(c echo.Context) error {
 
-	rq := model.ProductCreateRequest{}
-
-	err := JsonBodyTo(c, &rq)
 	db := db.DbManager()
+
+	request := CreateProductRequest{}
+	err := JsonBodyTo(c, &request)
+
 	if err != nil {
 		return ErrorResponse(c, err)
 	}
 
-	product := model.Product(rq.Product)
-	goods := model.Goods{}
-	goods.MasterData = model.MasterData(product.MasterData)
-	goods.UnitPrice = rq.UnitPrice
-	goods.UnitQuantityID = rq.MainUnitQuantityID
+	product := model.Product(request.Product)
+	stockMove := model.StockMove{
+		ProductId: product.ID,
+		Qty:       float32(request.StockInit),
+	}
 
 	tx := db.Begin()
 
@@ -35,9 +41,12 @@ func CreateProduct(c echo.Context) error {
 		return ErrorResponse(c, err)
 	}
 
-	goods.ProductID = product.ID
+	if err := tx.Create(&stockMove).Error; err != nil {
+		tx.Rollback()
+		return ErrorResponse(c, err)
+	}
 
-	if err := tx.Create(&goods).Error; err != nil {
+	if err := UpdateStockBalance(db, product.ID, float32(request.StockInit)); err != nil {
 		tx.Rollback()
 		return ErrorResponse(c, err)
 	}

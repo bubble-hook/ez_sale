@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"ezsale/db"
+	"ezsale/model"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"reflect"
 
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 )
 
@@ -122,4 +124,29 @@ func UpdateMasterData(c echo.Context, masterModel interface{}) error {
 	db := db.DbManager()
 	db.Debug().Model(masterModel).Updates(masterModel)
 	return c.JSON(http.StatusOK, &masterModel)
+}
+
+func UpdateStockBalance(db *gorm.DB, productId uint, qty float32) error {
+
+	count := 0
+	stockBal := model.StockBalance{}
+	db.Model(&stockBal).Where("productId = ?", productId).Count(&count)
+
+	if err := db.First(&stockBal, productId).Error; err != nil {
+		return err
+	}
+	stockBal.PrvQty = stockBal.CurrentQty
+	stockBal.CurrentQty += qty
+
+	if count < 1 {
+		if err := db.Create(&stockBal).Error; err != nil {
+			return err
+		}
+	} else {
+		if err := db.Save(&stockBal).Error; err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
